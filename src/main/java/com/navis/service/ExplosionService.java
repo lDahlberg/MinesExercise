@@ -1,6 +1,6 @@
 package com.navis.service;
 
-import com.navis.exploder.ExplodableItem;
+import com.navis.explodableItems.ExplodableItem;
 
 import java.util.List;
 

@@ -1,6 +1,7 @@
 package com.navis.mappers;
 
-import com.navis.mines.Mine;
+import com.navis.explodableItems.ExplodableItem;
+import com.navis.explodableItems.mines.Mine;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,11 +11,11 @@ import static java.lang.Float.parseFloat;
 public class MineMapper {
 
     private static final String regexSplit = "\\s";
-    public List<Mine> createMines(List<String> unmappedMines) {
+    public List<ExplodableItem> createMines(List<String> unmappedMines) {
         return unmappedMines.stream().map(this::createMineFromString).collect(Collectors.toList());
     }
 
-    public Mine createMineFromString(String unmappedMine) {
+    private Mine createMineFromString(String unmappedMine) {
         String[] values = unmappedMine.split(regexSplit);
 
         int expectedLength = 3;

@@ -1,7 +1,7 @@
 package com.navis.chainReactors;
 
-import com.navis.exploder.ExplodableItem;
-import com.navis.service.ExplosionChecker;
+import com.navis.explodableItems.ExplodableItem;
+import com.navis.service.ExplosionCheckerService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class DepthFirstChainReactor {
 
-    public Set<ExplodableItem> recurseThroughChainReaction(ExplodableItem explodedItem,
+    public static Set<ExplodableItem> recurseThroughChainReaction(ExplodableItem explodedItem,
                                                            Set<ExplodableItem> itemsToRecurse,
                                                            Set<ExplodableItem> itemsDestroyed) {
 
@@ -25,7 +25,7 @@ public class DepthFirstChainReactor {
                 .collect(Collectors.toCollection(HashSet::new));
 
         for(ExplodableItem itemToRecurse: setWithExplodedItemRemoved) {
-            if(ExplosionChecker.didExplode(explodedItem.getXCoordinate(), explodedItem.getYCoordinate(), explodedItem.getBlastRadius(),
+            if(ExplosionCheckerService.didExplode(explodedItem.getXCoordinate(), explodedItem.getYCoordinate(), explodedItem.getBlastRadius(),
                     itemToRecurse.getXCoordinate(), itemToRecurse.getYCoordinate())) {
                     itemsDestroyed.addAll(recurseThroughChainReaction(itemToRecurse, setWithExplodedItemRemoved, itemsDestroyed));
             }

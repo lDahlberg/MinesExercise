@@ -1,61 +1,38 @@
 package com.navis.service.impl;
 
-import com.navis.exploder.ExplodableItem;
-import com.navis.service.ExplosionChecker;
+import com.navis.chainReactors.DepthFirstChainReactor;
+import com.navis.explodableItems.ExplodableItem;
 import com.navis.service.ExplosionService;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class MineExplosionService implements ExplosionService {
+
+    // In the interest of time, I've omitted a memoization of this chain reaction
+    // But the next step would be to create a HashMap to store existing values and then add those values
+    // to the sets in the chain reactor so we don't have to re-cycle through them
     @Override
     public List<ExplodableItem> findGreatestChainReactions(List<ExplodableItem> itemsToExplode) {
-        Map<ExplodableItem, Set<ExplodableItem>> relationships = itemsToExplode.stream().map(explodableItem -> {
-            Set<ExplodableItem> explodedItems = itemsToExplode.stream().filter(item -> ExplosionChecker.didExplode(
-                    explodableItem.getXCoordinate(),
-                    explodableItem.getYCoordinate(),
-                    explodableItem.getBlastRadius(),
-                    item.getXCoordinate(),
-                    item.getYCoordinate()
-            )).collect(Collectors.toSet());
-            return new Relationships(explodableItem, explodedItems);
-        }).collect(Collectors.toMap(Relationships::getExplodableItem, Relationships::getItemsInBlastRadius));
 
-        for(ExplodableItem itemToExplode : itemsToExplode) {}
-        return null;
-    }
-
-    public Set<ExplodableItem> recurseThroughSets(Map<ExplodableItem, Set<ExplodableItem>> relationships,
-                                                  Set<ExplodableItem> itemsToRecurse,
-                                                  Set<ExplodableItem> itemsAlreadyDestroyed) {
-        if(itemsAlreadyDestroyed.containsAll(itemsToRecurse)) {
-            return itemsAlreadyDestroyed;
+        int largestSize = 0;
+        List<ExplodableItem> minesToChoose = new ArrayList<>();
+        Set<ExplodableItem> itemsToRecurse = new HashSet<>(itemsToExplode);
+        for(ExplodableItem itemToExplode : itemsToExplode) {
+            Set<ExplodableItem> explodedItems = DepthFirstChainReactor.recurseThroughChainReaction(
+                    itemToExplode,
+                    itemsToRecurse,
+                    new HashSet<>()
+            );
+            if(explodedItems.size() == largestSize) {
+                minesToChoose.add(itemToExplode);
+            } else if(explodedItems.size() > largestSize) {
+                minesToChoose = new ArrayList<>();
+                minesToChoose.add(itemToExplode);
+                largestSize = explodedItems.size();
+            }
         }
 
-        itemsAlreadyDestroyed.addAll(itemsToRecurse);
-
-        for(ExplodableItem itemToRecurse: itemsToRecurse) {
-            itemsAlreadyDestroyed.addAll(recurseThroughSets(relationships, relationships.get(itemToRecurse), itemsAlreadyDestroyed));
-        }
-        return itemsAlreadyDestroyed;
-    }
-    private class Relationships {
-        private ExplodableItem explodableItem;
-        private Set<ExplodableItem> itemsInBlastRadius;
-
-        public Relationships(ExplodableItem explodableItem, Set<ExplodableItem> itemsInBlastRadius) {
-            this.explodableItem = explodableItem;
-            this.itemsInBlastRadius = itemsInBlastRadius;
-        }
-
-        public ExplodableItem getExplodableItem() {
-            return explodableItem;
-        }
-
-        public Set<ExplodableItem> getItemsInBlastRadius() {
-            return itemsInBlastRadius;
-        }
+        System.out.println(String.format("Maximum numbers of mines exploded is: %d", largestSize));
+        return minesToChoose;
     }
 }

@@ -1,21 +1,27 @@
 package com.navis;
 
+import com.navis.explodableItems.ExplodableItem;
 import com.navis.mappers.MineMapper;
-import com.navis.mines.Mine;
 import com.navis.readers.Reader;
 import com.navis.readers.impl.TextFileReader;
+import com.navis.service.ExplosionService;
+import com.navis.service.impl.MineExplosionService;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         Reader reader = new TextFileReader();
-        List<String> stringOfMines = reader.read();
+        List<String> stringOfMines = reader.read(args[0]);
 
         MineMapper mapper = new MineMapper();
-        List<Mine> mines = mapper.createMines(stringOfMines);
+        List<ExplodableItem> mines = mapper.createMines(stringOfMines);
 
-        mines.forEach(System.out::println);
+        ExplosionService service = new MineExplosionService();
+        List<ExplodableItem> results = service.findGreatestChainReactions(mines);
+
+        System.out.println(results);
     }
 }

@@ -1,4 +1,4 @@
-package com.navis.exploder;
+package com.navis.explodableItems;
 
 import java.util.Objects;
 
@@ -27,11 +27,9 @@ public abstract class ExplodableItem {
 
     @Override
     public String toString() {
-        return "ExplodableItem{" +
-                "xCoordinate=" + this.xCoordinate +
+        return "xCoordinate=" + this.xCoordinate +
                 ", yCoordinate=" + yCoordinate +
-                ", blastRadius=" + blastRadius +
-                '}';
+                ", blastRadius=" + blastRadius;
     }
 
     @Override

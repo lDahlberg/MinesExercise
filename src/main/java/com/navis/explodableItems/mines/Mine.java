@@ -1,9 +1,13 @@
-package com.navis.mines;
+package com.navis.explodableItems.mines;
 
-import com.navis.exploder.ExplodableItem;
+import com.navis.explodableItems.ExplodableItem;
 
+/*
+* Mine that can explode
+* Contains a null value that has minimum integer values to put it off the grid so it doesn't affect the calculations
+* But also doesn't force null checks
+*/
 public final class Mine extends ExplodableItem {
-
     private static int offGrid = Integer.MIN_VALUE;
     private static int nullBlastValue = 0;
     public static Mine NULL = new Mine(offGrid, offGrid, nullBlastValue);
@@ -20,5 +24,10 @@ public final class Mine extends ExplodableItem {
     @Override
     public boolean equals(Object obj) {
         return super.equals(obj);
+    }
+
+    @Override
+    public String toString() {
+        return "Mine{" + super.toString() + "}";
     }
 }

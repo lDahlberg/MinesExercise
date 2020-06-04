@@ -1,11 +1,11 @@
 package com.navis.chainReactors;
 
-import com.navis.exploder.ExplodableItem;
-import com.navis.mines.Mine;
-import org.junit.jupiter.api.BeforeEach;
+import com.navis.explodableItems.ExplodableItem;
+import com.navis.explodableItems.mines.Mine;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,21 +13,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DepthFirstChainReactorTest {
 
-    private DepthFirstChainReactor dfs;
-
-    @BeforeEach
-    public void setup() {
-        dfs = new DepthFirstChainReactor();
-    }
-
     @Test
     void recurseThroughSetsTestsBaseCondition() {
 
         Mine mineAlreadyExploded = new Mine(0, 0, 1);
 
-        Set<ExplodableItem> itemsDestroyed = new HashSet<>(Arrays.asList(mineAlreadyExploded));
+        Set<ExplodableItem> itemsDestroyed = new HashSet<>(Collections.singleton(mineAlreadyExploded));
 
-        Set<ExplodableItem> result = dfs.recurseThroughChainReaction(mineAlreadyExploded, new HashSet<>(), itemsDestroyed);
+        Set<ExplodableItem> result = DepthFirstChainReactor.recurseThroughChainReaction(mineAlreadyExploded, new HashSet<>(), itemsDestroyed);
 
         assertEquals(result, itemsDestroyed);
     }
@@ -39,10 +32,10 @@ class DepthFirstChainReactorTest {
 
         Mine adjacentMine = new Mine(1, 0, 1);
 
-        Set<ExplodableItem> itemsToRecurse = new HashSet<>(Arrays.asList(adjacentMine));
+        Set<ExplodableItem> itemsToRecurse = new HashSet<>(Collections.singleton(adjacentMine));
         Set<ExplodableItem> itemsDestroyed = new HashSet<>();
 
-        Set<ExplodableItem> result = dfs.recurseThroughChainReaction(mineToExplode, itemsToRecurse, itemsDestroyed);
+        Set<ExplodableItem> result = DepthFirstChainReactor.recurseThroughChainReaction(mineToExplode, itemsToRecurse, itemsDestroyed);
 
         Set<ExplodableItem> expected = new HashSet<>(Arrays.asList(mineToExplode, adjacentMine));
         assertEquals(expected, result);
@@ -60,7 +53,7 @@ class DepthFirstChainReactorTest {
         Set<ExplodableItem> itemsToRecurse = new HashSet<>(Arrays.asList(adjacentMine, farAwayMine, farAwayMineAdjacentMine));
         Set<ExplodableItem> itemsDestroyed = new HashSet<>();
 
-        Set<ExplodableItem> result = dfs.recurseThroughChainReaction(mineToExplode, itemsToRecurse, itemsDestroyed);
+        Set<ExplodableItem> result = DepthFirstChainReactor.recurseThroughChainReaction(mineToExplode, itemsToRecurse, itemsDestroyed);
 
         Set<ExplodableItem> expected = new HashSet<>(Arrays.asList(mineToExplode, adjacentMine, farAwayMine, farAwayMineAdjacentMine));
         assertEquals(expected, result);
@@ -78,7 +71,7 @@ class DepthFirstChainReactorTest {
         Set<ExplodableItem> itemsToRecurse = new HashSet<>(Arrays.asList(adjacentMine, farAwayMine, farAwayMineAdjacentMine));
         Set<ExplodableItem> itemsDestroyed = new HashSet<>();
 
-        Set<ExplodableItem> result = dfs.recurseThroughChainReaction(mineToExplode, itemsToRecurse, itemsDestroyed);
+        Set<ExplodableItem> result = DepthFirstChainReactor.recurseThroughChainReaction(mineToExplode, itemsToRecurse, itemsDestroyed);
 
         Set<ExplodableItem> expected = new HashSet<>(Arrays.asList(mineToExplode, adjacentMine));
         assertEquals(expected, result);
