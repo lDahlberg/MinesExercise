@@ -6,7 +6,7 @@ off a chain reaction.  For any mine that explodes, all mines within
 the blast radius of that mine will be triggered to explode in one
 second.  The mine you manually explode blows up at time 0.
  
-To do so, the program runs through the command line and accepts a text file as a command line argument. The program
+To do so, the program runs through the command line and accepts the location of a text file as a command line argument. The program
 will then display a system out of the mines that create the maximum number of explosions as well as the number of explosions
 expected
 
